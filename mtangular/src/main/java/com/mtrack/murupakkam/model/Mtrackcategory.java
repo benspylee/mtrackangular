@@ -9,14 +9,6 @@ import javax.persistence.Id;
 
 
 
-
-
-
-
-
-
-
-
 @Entity
 public class Mtrackcategory
 extends Mbasemodel

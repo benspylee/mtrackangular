@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mtangular.ui.core.ControlBase;
-import com.mtrack.murupakkam.core.model.Mbasemodel;
 import com.mtrack.murupakkam.core.model.ResponseWrap;
+import com.mtrack.murupakkam.model.Mtrackpost;
 
 @RestController
-public class PostMxController extends ControlBase {
+public class PostMxController extends ControlBase<Mtrackpost> {
 	
 	@RequestMapping(path="/posts",method=RequestMethod.GET)
 	public ResponseWrap<?> retriveAll()
@@ -26,14 +26,14 @@ public class PostMxController extends ControlBase {
 	}
 	
 	@RequestMapping(path="/posts",method=RequestMethod.POST)
-	public ResponseWrap<?> add(Mbasemodel obj)
+	public ResponseWrap<?> add(Mtrackpost obj)
 	{
 		return null;
 		
 	}
 	
 	@RequestMapping(path="/posts/{id}",method=RequestMethod.POST)
-	public ResponseWrap<?> update(Mbasemodel obj)
+	public ResponseWrap<?> update(Mtrackpost obj)
 	{
 		return null;
 		

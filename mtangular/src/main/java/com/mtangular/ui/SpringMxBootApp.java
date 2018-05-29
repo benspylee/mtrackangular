@@ -1,12 +1,19 @@
 package com.mtangular.ui;
+import javax.sql.DataSource;
+
+import org.h2.jdbcx.JdbcDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 import com.mtangular.ui.core.BaseConfig;
 
@@ -17,11 +24,33 @@ import com.mtangular.ui.core.BaseConfig;
 //@Import(value=BaseConfig.class) (exclude=HibernateJpaAutoConfiguration.class)
 @EntityScan(basePackages="com.mtrack.murupakkam.model") 
 @PropertySource({"classpath:application.properties"})
-public class SpringMxBootApp {
+public class SpringMxBootApp implements CommandLineRunner {
+	
+	//@Autowired
+    //DataSource dataSource;
+	
+	@Autowired
+	public Environment env;
+	
+	@Bean
+	public DataSource dataSource()
+	{
+	 JdbcDataSource ds = new JdbcDataSource();
+	 ds.setURL(env.getProperty("spring.datasource.url"));
+	 ds.setUser(env.getProperty("spring.datasource.data-username"));
+	 ds.setPassword(env.getProperty("spring.datasource.data-password"));
+	 return ds;
+	}
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SpringMxBootApp.class, args);
 	}
 	
+	@Override
+	 public void run(String... args) throws Exception {
+
+	        System.out.println("DATASOURCE = " + dataSource());
+
+	 }
 	
 }
