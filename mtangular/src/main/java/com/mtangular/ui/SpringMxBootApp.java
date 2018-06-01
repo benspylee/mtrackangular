@@ -9,11 +9,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import com.mtangular.ui.core.BaseConfig;
 
@@ -31,6 +34,22 @@ public class SpringMxBootApp implements CommandLineRunner {
 	
 	@Autowired
 	public Environment env;
+	
+	@Bean
+	public DispatcherServlet dispatcherServlet()
+	{
+		return new DispatcherServlet();
+		
+	}
+	
+	@Bean
+	public ServletRegistrationBean servletRegistrationBean()
+	{
+		ServletRegistrationBean register=new ServletRegistrationBean(dispatcherServlet(),"/api/*");
+		register.setName(DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME);
+		return register;
+	}
+	
 	
 	@Bean
 	public DataSource dataSource()

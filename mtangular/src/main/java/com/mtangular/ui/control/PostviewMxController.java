@@ -2,6 +2,7 @@ package com.mtangular.ui.control;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,14 +34,14 @@ public class PostviewMxController extends ControlBase<Mtrackpostview> {
 	}
 	
 	@RequestMapping(path="/postview",method=RequestMethod.POST)
-	public ResponseWrap<?> add(Mtrackpostview obj)
+	public ResponseWrap<?> add(@RequestBody Mtrackpostview obj)
 	{
 		return (ResponseWrap<?>) mtrackMxService.addPostview(obj);
 		
 	}
 	
 	@RequestMapping(path="/postview/{id}",method=RequestMethod.POST)
-	public ResponseWrap<?> update(Mtrackpostview obj)
+	public ResponseWrap<?> update(@RequestBody Mtrackpostview obj)
 	{
 			return (ResponseWrap<?>) mtrackMxService.updatePostview(obj);
 		
