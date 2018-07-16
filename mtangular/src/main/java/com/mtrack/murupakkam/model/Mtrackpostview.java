@@ -33,16 +33,16 @@ implements Serializable
 	@GeneratedValue
 	private int postviewid;
 	@Id
-	@Column(name = "postid")
-	private Integer postid;
+	//@Column(name = "postid")
+	private Integer postid=0;
 	private String postimgurls;
 	private String postviewdesc;
 	private String postfileid;
 	private Date createddate;
-	private Integer cuser;
-	private Integer status;
+	private Integer cuser=0;
+	private Integer status=0;
 	private Date modifieddate;
-	private Integer muser;
+	private Integer muser=0;
 
 /*	@OneToOne(mappedBy="postinfo",optional=false)
 	//@JoinColumn()

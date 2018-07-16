@@ -28,9 +28,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT,classes=SpringMxBootApp.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT,classes=SpringMxBootApp.class)
+//@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class QuoteLinkTest {
   
 	@Autowired
@@ -39,7 +39,7 @@ public class QuoteLinkTest {
 	
 	public Quotes quotes=null;
 	
-	@Before
+	//@Before
 	public void setup()
 	{
 		quotes=new Quotes();
@@ -47,8 +47,8 @@ public class QuoteLinkTest {
 		quotes.setQuotedesc("All is well");
 	}
 	
-	@Test
-	@Before
+	//@Test
+	//@Before
 	public void a1addtest() throws JsonParseException, JsonMappingException, IOException
 	{	
 		ResponseEntity<ResponseWrap> responseEntity =testRestTemplate.postForEntity("/quotes",quotes , ResponseWrap.class);
@@ -60,7 +60,7 @@ public class QuoteLinkTest {
 		System.out.println("######++++##### "+quotes);
 	}
 	
-	@Test
+	//@Test
 	public void a2updatetest() throws JsonParseException, JsonMappingException, IOException
 	{
 		quotes.setQuotecolor("red");
@@ -69,7 +69,7 @@ public class QuoteLinkTest {
 		assertEquals(wrap.getMsg(), ReturnStatus.SUCCESS.getMsg());
 	}
 	
-	@Test
+	//@Test
 	public void a3retrievetest() throws JsonParseException, JsonMappingException, IOException, URISyntaxException
 	{
 		
@@ -80,7 +80,7 @@ public class QuoteLinkTest {
 		assertEquals(wrap.getMsg(), ReturnStatus.SUCCESS.getMsg());
 	}
 	
-	@Test
+	//@Test
 	public void a4deletetest() throws JsonParseException, JsonMappingException, IOException, URISyntaxException
 	{
 		URI uri=new URI("/quotes/"+quotes.getQuoteno());

@@ -6,6 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { NgModuleDefinition } from '@angular/core/src/view';
 import { Observable } from 'rxjs/Observable';
 import { AuthenticationService } from './service/authentication.service';
+import { PostComponent } from './post/post.component';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +38,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'post', component: PostComponent },
   { path: '#', redirectTo: '' }
 ];
 

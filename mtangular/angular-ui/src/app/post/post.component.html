@@ -1,0 +1,129 @@
+<div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default panel-table">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col col-xs-6">
+                <h3 class="panel-title">PostManager</h3>
+              </div>
+              <div class="col col-xs-6 text-right">
+                <button type="button" class="btn btn-sm btn-primary btn-create" (click)="add()">Add</button>
+                <button type="button" class="btn btn-sm btn-primary btn-create" (click)="edit()">Edit</button>
+                <button type="button" class="btn btn-sm btn-primary btn-delete" (click)="deletePost()">Delete</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <table class="table table-striped table-bordered table-list">
+              <thead>
+                <tr>
+                  <th>PostTitle</th>
+                  <th>PostTitle2</th>
+                  <th>PostDesc</th>
+                </tr>
+              </thead>
+              <tr *ngFor="let post of posts; let i = index" (click)="setClickedRow(i)" [class.active]="i == selectedRow">
+                <td>{{post.posttitle}}</td>
+                <td>{{post.posttitle2}}</td>
+                <td class="ellipsis" >{{post.postinfo.postviewdesc}}</td>
+              </tr>
+            </table> 
+          </div>
+          <!--           <div class="panel-footer">
+              <div class="row">
+                <div class="col col-xs-4">Page 1 of 5
+                </div>
+                <div class="col col-xs-8">
+                  <ul class="pagination hidden-xs pull-right">
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                  </ul>
+                  <ul class="pagination visible-xs pull-right">
+                      <li><a href="#">«</a></li>
+                      <li><a href="#">»</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div> -->
+        </div>
+      </div>
+    </div>
+
+    <div id="myModal" class="modal" [style.display]="popstyle">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <div (click)="toggle()">
+            <span class="close">&times;</span>
+          </div>
+
+          <!--  <h2> </h2> -->
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <form #f="ngForm" name="form" (ngSubmit)="f.form.valid && submitPostinfo()" novalidate>
+
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !posttitle.valid}">
+                <label for="posttitle">PostTitle</label>
+                <input type="text" id="posttitle" name="posttitle" class="form-control" [(ngModel)]="model.posttitle" #posttitle="ngModel"
+                  required />
+                <div *ngIf="f.submitted && !posttitle.valid" class="help-block">PostTitle required</div>
+              </div>
+
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !posttitle2.valid}">
+                  <label for="posttitle2">PostTitle2</label>
+                  <input type="text" id="posttitle2" name="posttitle2" class="form-control" [(ngModel)]="model.posttitle2" #posttitle2="ngModel"
+                    required />
+                  <div *ngIf="f.submitted && !posttitle2.valid" class="help-block">PostTitle2 required</div>
+                </div>
+
+                <div class="form-group" [ngClass]="{'has-error':f.submitted && !newscategorycode.valid}">
+                    <label for="newscategorycode">PostCategory</label>
+                    <select  id="newscategorycode" name="newscategorycode" class="form-control" [(ngModel)]="model.newscategorycode" #newscategorycode="ngModel"
+                      required >
+                           <option  *ngFor="let cat of cats" [ngValue]="cat.newscategorycode">{{cat.newscategoryname}}</option>
+                    </select>
+                    <div *ngIf="f.submitted && !newscategorycode.valid" class="help-block">PostCategory required</div>
+                  </div>
+  
+
+                <div class="form-group" [ngClass]="{'has-error':f.submitted && !postdesc.valid}">
+                    <label for="postdesc">PostDesc</label>
+                    <textarea rows="10" id="postdesc" name="postdesc" class="form-control" [(ngModel)]="model.postinfo.postviewdesc" #postdesc="ngModel"
+                      required ></textarea>
+                    <div *ngIf="f.submitted && !postdesc.valid" class="help-block">PostDesc required</div>
+                  </div>
+
+                   <div class="form-group" [ngClass]="{'has-error':f.submitted && !postimgurl.valid}">
+                    <label for="postimgurl">PostImage</label>
+                      <input type="text" style="display:none; " id="postimgurl" name="postimgurl" class="form-control" [(ngModel)]="model.postimgurl" #postimgurl="ngModel"
+                    required />
+                   <input type="file"  #fileupload  name="uploadfile1" (change)="postimgfileChange($event)" />
+              <!--     <button class="btn btn-success" [disabled]="uploadfile1 == undefined"
+	                  (click)="uploadfilepostimg()">Upload</button>
+           -->          <div *ngIf="f.submitted && !postimgurl.valid" class="help-block">PostImage required</div>
+                  </div>
+
+              <div class="form-group" style=" margin: 0 auto;text-align:center;">
+                <button class="btn btn-primary">Submit</button>
+              </div>
+              <div *ngIf="submiterror" class="help-block"> </div>
+
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!--   <h3> </h3> -->
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>

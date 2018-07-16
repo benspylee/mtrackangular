@@ -9,20 +9,23 @@ import { RouterModule } from '@angular/router';
 import { AuthenticationService } from './service/authentication.service';
 import {HttpClientModule} from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
+import { PostComponent } from './post/post.component';
+import { PostinfoService } from './service/postinfo.service';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    PostComponent
   ],
   imports: [
     BrowserModule,FormsModule,RouterModule.forRoot(routes),HttpClientModule,
 
 
   ],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService,PostinfoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

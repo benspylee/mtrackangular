@@ -119,7 +119,7 @@ public class MtrackMxDAOImpl extends DAOBase{
 		  Field f = OuterJoinLoader.class.getDeclaredField("sql");
 		  f.setAccessible(true);
 		  String sql = (String) f.get(loader);
-	*/	  
+		 */	  
 
 		try {
 			return criteria.list();
@@ -140,7 +140,7 @@ public class MtrackMxDAOImpl extends DAOBase{
 		session.save(postview);
 		//obj.setPostinfo(postview);
 		//obj.setPostid(postview.getPostid());
-		
+
 		txn.commit();
 		return obj.toString();	
 	}
@@ -152,8 +152,8 @@ public class MtrackMxDAOImpl extends DAOBase{
 		//session.update(obj);
 		Mtrackpostview postview=	obj.getPostinfo();
 		session.update(postview);
-	//	obj.setPostinfo(postview);
-	//	obj.setPostid(postview.getPostid());
+		//	obj.setPostinfo(postview);
+		//	obj.setPostid(postview.getPostid());
 		session.update(obj);
 		txn.commit();
 		return obj.toString();		
@@ -170,8 +170,8 @@ public class MtrackMxDAOImpl extends DAOBase{
 		return obj.toString();
 
 	}
-	
-	
+
+
 
 	public List<MtrackUser> retriveAllMtrackUser() throws Exception
 	{
@@ -181,22 +181,22 @@ public class MtrackMxDAOImpl extends DAOBase{
 
 	public String addMtrackUser(MtrackUser obj) throws HibernateException, Exception
 	{			
-			Session session=	getSessionFactory().openSession();		
-			Transaction txn=	session.beginTransaction();
-			session.save(obj);
-			txn.commit();
-			return obj.toString();	
+		Session session=	getSessionFactory().openSession();		
+		Transaction txn=	session.beginTransaction();
+		session.save(obj);
+		txn.commit();
+		return obj.toString();	
 	}
-	
+
 	public String updateMtrackUser(MtrackUser obj) throws HibernateException, Exception
 	{
-			Session session=	getSessionFactory().openSession();		
-			Transaction txn=	session.beginTransaction();
-			session.update(obj);
-			txn.commit();
-			return obj.toString();		
+		Session session=	getSessionFactory().openSession();		
+		Transaction txn=	session.beginTransaction();
+		session.update(obj);
+		txn.commit();
+		return obj.toString();		
 	}
-	
+
 	public String deleteMtrackUser(int id) throws HibernateException, Exception
 	{
 		Session session=	getSessionFactory().openSession();		
@@ -205,9 +205,9 @@ public class MtrackMxDAOImpl extends DAOBase{
 		session.delete(obj);
 		txn.commit();
 		return obj.toString();
-	
+
 	}
-	
+
 	public MtrackUser authenticateUser(MtrackUser obj) throws HibernateException, Exception
 	{
 		Session session=	getSessionFactory().openSession();		
@@ -216,6 +216,7 @@ public class MtrackMxDAOImpl extends DAOBase{
 		query.setString(0, obj.getUsername());
 		query.setString(1, obj.getPassword());
 		query.setInteger(2,RecordStatus.ACTIVE.getStatus());
+		System.out.println("user  "+obj.getUsername() + obj.getPassword());	
 		List<MtrackUser> list=query.addEntity(MtrackUser.class).list();
 		txn.commit();
 		if(list.size()>0)
@@ -226,9 +227,9 @@ public class MtrackMxDAOImpl extends DAOBase{
 		}
 		else
 			throw new Exception("Invalid Credentials");
-		
+
 	}
-	
-	
+
+
 
 }

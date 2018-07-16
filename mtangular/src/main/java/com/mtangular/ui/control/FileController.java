@@ -33,13 +33,13 @@ public class FileController {
 		File tobeUpload=new File(UPLOAD_PATH+File.separator+filename);
 		fileinfo.setFilename(filename);
 		fileinfo.setFilepath(tobeUpload.getAbsolutePath());
-		fileinfo.setUploadStatus(ReturnStatus.SUCCESS.getMsg());
+		fileinfo.setResponse(ReturnStatus.SUCCESS.getMsg());
 		try {
 			header.add("fileuploaded", filename);
 			multipartfile.transferTo(tobeUpload);			
 		} catch (Exception e) {
 		//	fileuploadstatus="File Upload " + ReturnStatus.FAIL.getMsg();
-			fileinfo.setUploadStatus(ReturnStatus.FAIL.getMsg());
+			fileinfo.setResponse(ReturnStatus.FAIL.getMsg());
 		}		
 		return new ResponseEntity<>(fileinfo,header,HttpStatus.OK);		
 	    }

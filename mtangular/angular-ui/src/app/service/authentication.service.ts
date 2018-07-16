@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 
 import { User } from '../model/user';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import 'rxjs/add/operator/map'
 import {Observable} from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
 import { BehaviorSubject } from 'rxjs';
+import { Headers,RequestOptions } from '@angular/http';
 
 @Injectable()
 export class AuthenticationService {
@@ -14,7 +15,7 @@ export class AuthenticationService {
   private loggedIn = new BehaviorSubject<boolean>(false); 
 
   constructor(private httpclient: HttpClient, private router: Router) {
-
+    
 
   }
 
@@ -29,7 +30,15 @@ export class AuthenticationService {
 
 
   login(user: User) :any {
-    return   this.httpclient.post("/api/users/authenticate", user)
+    let userxst=btoa("mark:m@dm@xFury");
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': "Basic " + userxst
+      })
+    };
+
+    return   this.httpclient.post("/api/users/authenticate", user,httpOptions)
      .map((response: Response) => response);
    /* .map(
       actuser => {

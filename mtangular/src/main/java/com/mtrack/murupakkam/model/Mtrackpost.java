@@ -11,12 +11,15 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+
+import org.hibernate.annotations.GenericGenerator;
 
 
 
@@ -40,8 +43,9 @@ extends Mbasemodel
 implements Serializable
 {
 	@Id
-	@GeneratedValue
-	@Column(name = "postid")
+	@GeneratedValue(generator="post_id_gen")
+	@GenericGenerator(name="post_id_gen",strategy="com.mtangular.ui.utils.generator.MtrackpostGen")
+	//@Column(name = "postid")
 	private int postid;
 	private String posttitle;
 	private String posttitle2;
