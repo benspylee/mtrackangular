@@ -64,6 +64,18 @@ deletePost(post:Posts)
 }
 
 
+searchPost(post:Posts)
+{
+  return   this.httpclient.post("/api/posts/search",JSON.stringify(post),this.httpOptions)
+  .map((response: Response) => response);
+}
+
+getPostCat()
+  {
+    return   this.httpclient.get("/api/postcategory",this.httpOptions)
+    .map((response: Response) => response);
+  }
+
 
 }
 

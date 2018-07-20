@@ -9,6 +9,8 @@
                 <h3 class="panel-title">PostManager</h3>
               </div>
               <div class="col col-xs-6 text-right">
+                <button type="button" class="btn btn-sm btn-primary btn-create" (click)="reset()">Reset</button>
+                <button type="button" class="btn btn-sm btn-primary btn-create" (click)="searchpop()">Search</button>
                 <button type="button" class="btn btn-sm btn-primary btn-create" (click)="add()">Add</button>
                 <button type="button" class="btn btn-sm btn-primary btn-create" (click)="edit()">Edit</button>
                 <button type="button" class="btn btn-sm btn-primary btn-delete" (click)="deletePost()">Delete</button>
@@ -16,20 +18,28 @@
             </div>
           </div>
           <div class="panel-body">
+              <div>
+                  <pagination-controls  id="listing_pagination" maxSize="5" directionLinks="true" (pageChange)="page = $event;selectedRow=-1;"></pagination-controls>
+              </div>
+
             <table class="table table-striped table-bordered table-list">
               <thead>
                 <tr>
                   <th>PostTitle</th>
-                  <th>PostTitle2</th>
                   <th>PostDesc</th>
+                  <th>PostInfo</th>
                 </tr>
               </thead>
-              <tr *ngFor="let post of posts; let i = index" (click)="setClickedRow(i)" [class.active]="i == selectedRow">
+              <tr *ngFor="let post of posts | paginate: { id: 'listing_pagination',
+              itemsPerPage: itemsPerPage,
+              currentPage: page,
+              totalItems: totalRec }; let i = index;" (click)="setClickedRow(i)" [class.active]="i == selectedRow">
                 <td>{{post.posttitle}}</td>
-                <td>{{post.posttitle2}}</td>
-                <td class="ellipsis" >{{post.postinfo.postviewdesc}}</td>
+                <td>{{post.postdesc}}</td>
+                <td class="ellipsis">{{post.postinfo.postviewdesc}}</td>
               </tr>
-            </table> 
+            </table>
+           
           </div>
           <!--           <div class="panel-footer">
               <div class="row">
@@ -54,6 +64,8 @@
       </div>
     </div>
 
+
+
     <div id="myModal" class="modal" [style.display]="popstyle">
 
       <!-- Modal content -->
@@ -62,8 +74,9 @@
           <div (click)="toggle()">
             <span class="close">&times;</span>
           </div>
-
-          <!--  <h2> </h2> -->
+          <div>
+              <Label>Manage Post</Label> 
+          </div>         
         </div>
         <div class="modal-body">
           <div class="container">
@@ -76,39 +89,51 @@
                 <div *ngIf="f.submitted && !posttitle.valid" class="help-block">PostTitle required</div>
               </div>
 
-              <div class="form-group" [ngClass]="{'has-error':f.submitted && !posttitle2.valid}">
-                  <label for="posttitle2">PostTitle2</label>
-                  <input type="text" id="posttitle2" name="posttitle2" class="form-control" [(ngModel)]="model.posttitle2" #posttitle2="ngModel"
-                    required />
-                  <div *ngIf="f.submitted && !posttitle2.valid" class="help-block">PostTitle2 required</div>
-                </div>
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !postdesc.valid}">
+                <label for="postdesc">PostDesc</label>
+                <input type="text" id="postdesc" name="postdesc" class="form-control" [(ngModel)]="model.postdesc" #postdesc="ngModel"
+                  required />
+                <div *ngIf="f.submitted && !postdesc.valid" class="help-block">PostDesc required</div>
+              </div>
 
-                <div class="form-group" [ngClass]="{'has-error':f.submitted && !newscategorycode.valid}">
-                    <label for="newscategorycode">PostCategory</label>
-                    <select  id="newscategorycode" name="newscategorycode" class="form-control" [(ngModel)]="model.newscategorycode" #newscategorycode="ngModel"
-                      required >
-                           <option  *ngFor="let cat of cats" [ngValue]="cat.newscategorycode">{{cat.newscategoryname}}</option>
-                    </select>
-                    <div *ngIf="f.submitted && !newscategorycode.valid" class="help-block">PostCategory required</div>
-                  </div>
-  
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !newscategorycode.valid}">
+                <label for="newscategorycode">PostCategory</label>
+                <select [compareWith]="byId" id="newscategorycode" name="newscategorycode" class="form-control" [(ngModel)]="model.newscategorycode"
+                  #newscategorycode="ngModel" required>
+                  <option *ngFor="let cat of cats" [ngValue]="cat.newscategorycode">{{cat.newscategoryname1}} / {{cat.newscategoryname2}}</option>
+                </select>
+                <div *ngIf="f.submitted && !newscategorycode.valid" class="help-block">PostCategory required</div>
+              </div>
 
-                <div class="form-group" [ngClass]="{'has-error':f.submitted && !postdesc.valid}">
-                    <label for="postdesc">PostDesc</label>
-                    <textarea rows="10" id="postdesc" name="postdesc" class="form-control" [(ngModel)]="model.postinfo.postviewdesc" #postdesc="ngModel"
-                      required ></textarea>
-                    <div *ngIf="f.submitted && !postdesc.valid" class="help-block">PostDesc required</div>
-                  </div>
 
-                   <div class="form-group" [ngClass]="{'has-error':f.submitted && !postimgurl.valid}">
-                    <label for="postimgurl">PostImage</label>
-                      <input type="text" style="display:none; " id="postimgurl" name="postimgurl" class="form-control" [(ngModel)]="model.postimgurl" #postimgurl="ngModel"
-                    required />
-                   <input type="file"  #fileupload  name="uploadfile1" (change)="postimgfileChange($event)" />
-              <!--     <button class="btn btn-success" [disabled]="uploadfile1 == undefined"
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !postvwdesc.valid}">
+                <label for="postvwdesc">PostInfo</label>
+                <textarea rows="10" id="postvwdesc" name="postvwdesc" class="form-control" [(ngModel)]="model.postinfo.postviewdesc" #postvwdesc="ngModel"
+                  required></textarea>
+                <div *ngIf="f.submitted && !postvwdesc.valid" class="help-block">PostDesc required</div>
+              </div>
+
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !postimgurl.valid}">
+                <label for="postimgurl">PostImage</label>
+                <input type="text" readonly id="postimgurl" name="postimgurl" class="form-control" [(ngModel)]="model.postimgurl"
+                  #postimgurl="ngModel" required />
+                <input type="file" #fileupload1 name="uploadfile1" (change)="postimgfileChange($event)" class="form-control"  />
+                <!--     <button class="btn btn-success" [disabled]="uploadfile1 == undefined"
 	                  (click)="uploadfilepostimg()">Upload</button>
-           -->          <div *ngIf="f.submitted && !postimgurl.valid" class="help-block">PostImage required</div>
-                  </div>
+           -->
+                <div *ngIf="f.submitted && !postimgurl.valid" class="help-block">PostImage required</div>
+              </div>
+
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !postimgurls.valid}">
+                  <label for="postimgurls">PostViewImage</label>
+                  <input type="text" readonly id="postimgurls" name="postimgurls" class="form-control" [(ngModel)]="model.postinfo.postimgurls"
+                    #postimgurls="ngModel" required />
+                  <input type="file" #fileupload2 name="uploadfile2" (change)="postimgfileChange($event)" class="form-control"  />
+                  <!--     <button class="btn btn-success" [disabled]="uploadfile1 == undefined"
+                      (click)="uploadfilepostimg()">Upload</button>
+             -->
+                  <div *ngIf="f.submitted && !postimgurl.valid" class="help-block">PostViewImage required</div>
+                </div>
 
               <div class="form-group" style=" margin: 0 auto;text-align:center;">
                 <button class="btn btn-primary">Submit</button>
@@ -125,5 +150,87 @@
 
     </div>
 
+    <div id="searchmodal" class="modal" [style.display]="searchstyle">
 
-  </div>
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <div (click)="togglesearch()">
+              <span class="close">&times;</span>
+            </div>
+              <Label>Search Post</Label> 
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <form #searchform="ngForm" name="form" (ngSubmit)="searchform.form.valid && search()" novalidate>
+  
+                <div class="form-group" [ngClass]="{'has-error':searchform.submitted && !posttitle.valid}">
+                  <label for="posttitle">PostTitle</label>
+                  <input type="text" id="posttitle" name="posttitle" class="form-control" [(ngModel)]="searchmodel.posttitle" #posttitle="ngModel"
+                     />
+                  <div *ngIf="f.submitted && !posttitle.valid" class="help-block">PostTitle required</div>
+                </div>
+  
+                <div class="form-group" [ngClass]="{'has-error':searchform.submitted && !postdesc.valid}">
+                  <label for="postdesc">PostDesc</label>
+                  <input type="text" id="posttitle2" name="postdesc" class="form-control" [(ngModel)]="searchmodel.postdesc" #postdesc="ngModel"
+                     />
+                  <div *ngIf="f.submitted && !postdesc.valid" class="help-block">PostDesc required</div>
+                </div>
+  
+  
+                <div class="form-group" [ngClass]="{'has-error':searchform.submitted && !postdesc.valid}">
+                  <label for="postdesc">PostInfo</label>
+                  <input type="text" id="postdesc" name="postdesc" class="form-control" [(ngModel)]="searchmodel.postinfo.postviewdesc" #postdesc="ngModel"/>
+                  <div *ngIf="f.submitted && !postdesc.valid" class="help-block">PostDesc required</div>
+                </div>
+
+                <div class="form-group" [ngClass]="{'has-error':searchform.submitted && !createddate.valid}">
+                    <label for="createddate">Post Date</label>
+                    <input type="text" class="form-control" id="createddate" name="createddate" (change)="datehandle($event)" [(ngModel)]="searchmodel.createddate" #createddate="ngModel"/>
+                    <div *ngIf="f.submitted && !createddate.valid" class="help-block">Post Date required</div>
+                  </div>
+          
+                <div class="form-group" style=" margin: 0 auto;text-align:center;">
+                  <button class="btn btn-primary">Search</button>
+                </div>
+                <div *ngIf="submiterror" class="help-block"> </div>
+  
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <!--   <h3> </h3> -->
+          </div>
+        </div>
+  
+      </div>
+
+
+    <div id="alertModal" class="modalalert" [style.display]="popalertstyle">
+      <div class="modal-alertcontent">
+        <div class="modal-header">
+          <div (click)="togglealert()">
+            <span class="close">&times;</span>           
+          </div>
+          <Label>Decision</Label> 
+        </div>
+
+        <div class="modal-body">
+          <div class="container">
+            <div style="text-align : center;">
+              <label>Are you sure you want to delete the item..?</label>
+            </div>
+            <div class="centered_buttons">
+              <button class="btn btn-primary div-button" (click)="deletePostdecision()">Ok</button>
+              <span width="10%"> </span>
+              <button class="btn btn-primary div-button" (click)="togglealert()">Cancel</button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>

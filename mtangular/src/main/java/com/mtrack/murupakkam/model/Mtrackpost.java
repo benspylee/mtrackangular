@@ -1,5 +1,6 @@
 package com.mtrack.murupakkam.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mtrack.murupakkam.core.model.Mbasemodel;
 import java.io.Serializable;
 import java.sql.Date;
@@ -51,6 +52,7 @@ implements Serializable
 	private String posttitle2;
 	private String postdesc;
 	private String postimgurl;
+	@JsonFormat(pattern="MM/dd/yyyy")
 	private Date createddate;
 	private Integer cuser;
 	private Integer status;

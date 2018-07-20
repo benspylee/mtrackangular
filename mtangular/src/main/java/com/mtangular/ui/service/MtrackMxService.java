@@ -214,6 +214,25 @@ public class MtrackMxService extends ServiceBase {
 
 	}
 
+	public ResponseWrap<?> searchPost(Mtrackpost obj) {
+		try {
+			return  handleSuccessResponse(mtrackMxDAOImpl.searchPost(obj));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return  handleFailedResponse((Object)e.getMessage(),null);
+		}
+
+	}
+
+	public ResponseWrap<?> postcatRetriveAll() {
+		try {
+			return  handleSuccessResponse(mtrackMxDAOImpl.postcatRetriveAll());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return  handleFailedResponse((Object)e.getMessage(),null);
+		}
+	}
+
 	
 	
 }

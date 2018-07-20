@@ -1,6 +1,8 @@
 package com.mtangular.ui.dao;
 
 import java.lang.reflect.Field;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -24,10 +26,12 @@ import org.springframework.jdbc.object.SqlQuery;
 import org.springframework.stereotype.Repository;
 
 import com.mtangular.ui.core.DAOBase;
+import com.mtangular.ui.utils.MCommonUtils;
 import com.mtangular.ui.utils.RecordStatus;
 import com.mtangular.ui.utils.ReturnStatus;
 import com.mtrack.murupakkam.core.model.Mbasemodel;
 import com.mtrack.murupakkam.model.MtrackUser;
+import com.mtrack.murupakkam.model.Mtrackcategory;
 import com.mtrack.murupakkam.model.Mtrackpost;
 import com.mtrack.murupakkam.model.Mtrackpostview;
 import com.mtrack.murupakkam.model.Quotes;
@@ -134,6 +138,8 @@ public class MtrackMxDAOImpl extends DAOBase{
 	{			
 		Session session=	getSessionFactory().openSession();		
 		Transaction txn=	session.beginTransaction();
+		obj.setCreateddate(new Date(new java.util.Date().getTime()));
+		obj.setModifieddate(new Date(new java.util.Date().getTime()));
 		session.save(obj);
 		Mtrackpostview postview=	obj.getPostinfo();
 		postview.setPostid(obj.getPostid());
@@ -150,6 +156,7 @@ public class MtrackMxDAOImpl extends DAOBase{
 		Session session=	getSessionFactory().openSession();		
 		Transaction txn=	session.beginTransaction();
 		//session.update(obj);
+		obj.setModifieddate(new Date(new java.util.Date().getTime()));
 		Mtrackpostview postview=	obj.getPostinfo();
 		session.update(postview);
 		//	obj.setPostinfo(postview);
@@ -170,8 +177,6 @@ public class MtrackMxDAOImpl extends DAOBase{
 		return obj.toString();
 
 	}
-
-
 
 	public List<MtrackUser> retriveAllMtrackUser() throws Exception
 	{
@@ -228,6 +233,81 @@ public class MtrackMxDAOImpl extends DAOBase{
 		else
 			throw new Exception("Invalid Credentials");
 
+	}
+
+	Integer count=0;
+	List<Object> sqlparm=new ArrayList<>();
+	public Object searchPost(Mtrackpost obj) throws HibernateException, Exception {
+		List<Mtrackpost> list=new ArrayList<>();
+		String query="select * from MTRACKPOST p,MTRACKPOSTVIEW pv where p.postid=pv.postid and  p.status=1";
+		count=0;
+		query= generateWhere(obj, query);
+		if(count>0)
+		{
+			Session session=	getSessionFactory().openSession();		
+			Transaction txn=	session.beginTransaction();
+			SQLQuery sqlquery=  session.createSQLQuery(query);
+			int i=0;
+			while(i<sqlparm.size())
+			{
+				sqlquery.setString(i, (String) sqlparm.get(i));
+				i++;
+			}
+			list=sqlquery.addEntity(Mtrackpost.class).list();
+
+			txn.commit();
+		}
+		if(list!=null && list.isEmpty())
+			throw new Exception("No Record Found");
+
+		return list;
+	}
+
+
+	private String generateWhere(Mtrackpost obj,String sql)
+	{
+		String finalsql="";
+		StringBuilder sb=new StringBuilder();
+		sqlparm.clear();
+		if(obj.getPosttitle()!=null && !"".equals(obj.getPosttitle()))
+		{
+			sb.append(" and POSTTITLE like ?");
+			sqlparm.add(obj.getPosttitle()+"%");
+			count++;
+		}
+
+		if(obj.getPosttitle2()!=null && !"".equals(obj.getPosttitle2()))
+		{	sb.append(" and POSTTITLE2 like ?");
+		sqlparm.add(obj.getPosttitle2()+"%");	
+		count++;
+		}
+
+		if(obj.getPostinfo()!=null && obj.getPostinfo().getPostviewdesc()!=null  && !"".equals(obj.getPostinfo().getPostviewdesc()))
+		{	sb.append(" and POSTVIEWDESC like ?");	
+		sqlparm.add(obj.getPostinfo().getPostviewdesc()+"%");
+		count++;
+		}
+
+		if(obj.getCreateddate()!=null && !"".equals(obj.getCreateddate()))
+		{	
+			sb.append(" and p.CREATEDDATE >= '"+MCommonUtils.dateTostring(obj.getCreateddate())+"'");
+			count++;
+		}
+
+		finalsql=sql+sb.toString();
+
+		return finalsql;
+	}
+
+	public Object postcatRetriveAll() throws HibernateException, Exception {
+		Criteria criteria =(Criteria) getSessionFactory().openSession().createCriteria(Mtrackcategory.class);
+		try {
+			return criteria.list();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 

@@ -16,6 +16,10 @@ public class Mtrackcategory
 extends Mbasemodel
 implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue
 	private int newscategorycode;

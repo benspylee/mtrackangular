@@ -57,4 +57,23 @@ public class PostMxController extends ControlBase<Mtrackpost> {
 		return (ResponseWrap<?>) mtrackMxService.deletePost(id);
 	}
 	
+	@RequestMapping(path="/posts/search",method=RequestMethod.POST)
+	public ResponseWrap<?> search(@RequestBody Mtrackpost obj)
+	{
+		return (ResponseWrap<?>) mtrackMxService.searchPost(obj);
+	}
+	
+	@RequestMapping(path="/postcategory",method=RequestMethod.GET)
+	public ResponseWrap<?> postcatRetriveAll()
+	{
+		try {
+			return (ResponseWrap<?>) mtrackMxService.postcatRetriveAll();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
 }

@@ -11,6 +11,7 @@ import {HttpClientModule} from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
 import { PostComponent } from './post/post.component';
 import { PostinfoService } from './service/postinfo.service';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 @NgModule({
@@ -22,7 +23,7 @@ import { PostinfoService } from './service/postinfo.service';
   ],
   imports: [
     BrowserModule,FormsModule,RouterModule.forRoot(routes),HttpClientModule,
-
+    NgxPaginationModule
 
   ],
   providers: [AuthenticationService,PostinfoService],
