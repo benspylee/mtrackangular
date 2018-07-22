@@ -98,4 +98,24 @@ implements Serializable
 	{
 		this.muser = muser;
 	}
+
+	@Override
+	public String toString() {
+		return " {\"quoteno\":\"" + quoteno + "\",\"quotedesc\":\"" + quotedesc + "\",\"quotecolor\":\"" + quotecolor
+				+ "\",\"quoteimg\":\"" + quoteimg + "\",\"createddate\":\"" + createddate + "\",\"cuser\":\"" + cuser
+				+ "\",\"status\":\"" + status + "\",\"modifieddate\":\"" + modifieddate + "\",\"muser\":\"" + muser
+				+ "\"}";
+	}
+
+	
+	/*@Override
+	public String toString() {
+		return "Quotes [quoteno=" + quoteno + ", quotedesc=" + quotedesc + ", quotecolor=" + quotecolor + ", quoteimg="
+				+ quoteimg + ", createddate=" + createddate + ", cuser=" + cuser + ", status=" + status
+				+ ", modifieddate=" + modifieddate + ", muser=" + muser + "]";
+	}
+	*/
+	
+	
+	
 }

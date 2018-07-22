@@ -1,14 +1,26 @@
 package com.mtrack.murupakkam.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mtrack.murupakkam.core.model.Mbasemodel;
 import java.io.Serializable;
 import java.sql.Date;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+
+import org.hibernate.annotations.GenericGenerator;
 
 
 
@@ -32,24 +44,30 @@ extends Mbasemodel
 implements Serializable
 {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(generator="post_id_gen")
+	@GenericGenerator(name="post_id_gen",strategy="com.mtangular.ui.utils.generator.MtrackpostGen")
+	//@Column(name = "postid")
 	private int postid;
 	private String posttitle;
 	private String posttitle2;
 	private String postdesc;
 	private String postimgurl;
+	@JsonFormat(pattern="MM/dd/yyyy")
 	private Date createddate;
 	private Integer cuser;
 	private Integer status;
 	private Date modifieddate;
 	private Integer muser;
 	private int newscategorycode;
-
+	
+	
 	@OneToOne
-	@JoinColumn(name="postid")
+	@PrimaryKeyJoinColumn
 	private Mtrackpostview postinfo;
 
-	public Mtrackpostview getPostinfo() {
+
+	
+    public Mtrackpostview getPostinfo() {
 		return postinfo;
 	}
 

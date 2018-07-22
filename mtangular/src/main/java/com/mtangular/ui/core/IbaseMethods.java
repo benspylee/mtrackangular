@@ -4,10 +4,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.mtrack.murupakkam.core.model.Mbasemodel;
 import com.mtrack.murupakkam.core.model.ResponseWrap;
 
-public interface IbaseMethods {
+public interface IbaseMethods<T> {
 	
 	public static String classname="";
 	
@@ -20,11 +19,11 @@ public interface IbaseMethods {
 	
 	
 	//@RequestMapping(path="/"+classname,method=RequestMethod.POST)
-	public ResponseWrap<?> add(Mbasemodel obj);
+	public ResponseWrap<?> add(T obj);
 	
 	
 	//@RequestMapping(path="/"+classname+"/{id}",method=RequestMethod.POST)
-	public ResponseWrap<?> update(Mbasemodel obj);
+	public ResponseWrap<?> update(T obj);
 	
 	
 	//@RequestMapping(path="/"+classname+"/{id}",method=RequestMethod.DELETE)
