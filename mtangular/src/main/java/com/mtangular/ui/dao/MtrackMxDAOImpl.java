@@ -11,6 +11,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.CriteriaQuery;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.engine.spi.LoadQueryInfluencers;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SessionImplementor;
@@ -42,7 +43,9 @@ public class MtrackMxDAOImpl extends DAOBase{
 
 	public List<Quotes> retriveAllQuotes() throws Exception
 	{
-		Criteria criteria =(Criteria) getSessionFactory().openSession().createCriteria(Quotes.class);
+		Criteria criteria =(Criteria) getSessionFactory().openSession()
+				.createCriteria(Quotes.class).add(Restrictions.eq("status",RecordStatus.ACTIVE.getStatus()));
+		
 		return criteria.list();
 	}
 
@@ -50,6 +53,8 @@ public class MtrackMxDAOImpl extends DAOBase{
 	{			
 		Session session=	getSessionFactory().openSession();		
 		Transaction txn=	session.beginTransaction();
+		quotes.setCreateddate(new Date(new java.util.Date().getTime()));
+		quotes.setModifieddate(new Date(new java.util.Date().getTime()));
 		session.save(quotes);
 		txn.commit();
 		return quotes.toString();	
@@ -59,6 +64,7 @@ public class MtrackMxDAOImpl extends DAOBase{
 	{
 		Session session=	getSessionFactory().openSession();		
 		Transaction txn=	session.beginTransaction();
+		quotes.setModifieddate(new Date(new java.util.Date().getTime()));
 		session.update(quotes);
 		txn.commit();
 		return quotes.toString();		
@@ -69,7 +75,9 @@ public class MtrackMxDAOImpl extends DAOBase{
 		Session session=	getSessionFactory().openSession();		
 		Transaction txn=	session.beginTransaction();
 		Quotes quotes=session.get(Quotes.class, id);		
-		session.delete(quotes);
+		quotes.setStatus(RecordStatus.DELETE.getStatus());
+		session.update(quotes);
+		//session.delete(quotes);
 		txn.commit();
 		return quotes.toString();
 
@@ -105,7 +113,9 @@ public class MtrackMxDAOImpl extends DAOBase{
 		Session session=	getSessionFactory().openSession();		
 		Transaction txn=	session.beginTransaction();
 		Mtrackpostview obj=session.get(Mtrackpostview.class, id);		
-		session.delete(obj);
+		obj.setStatus(RecordStatus.DELETE.getStatus());
+		session.update(obj);
+		//session.delete(obj);
 		txn.commit();
 		return obj.toString();
 
@@ -113,7 +123,8 @@ public class MtrackMxDAOImpl extends DAOBase{
 
 	public List<Mtrackpost> retriveAllPost() throws Exception
 	{
-		Criteria criteria =(Criteria) getSessionFactory().openSession().createCriteria(Mtrackpost.class);
+		Criteria criteria =(Criteria) getSessionFactory().openSession().createCriteria(Mtrackpost.class)
+				.add(Restrictions.eq("status",RecordStatus.ACTIVE.getStatus()));
 		/* CriteriaImpl c = (CriteriaImpl) criteria;
 		  SessionImpl s = (SessionImpl) c.getSession();
 		  SessionFactoryImplementor factory = (SessionFactoryImplementor) s.getSessionFactory();
@@ -171,8 +182,13 @@ public class MtrackMxDAOImpl extends DAOBase{
 		Session session=	getSessionFactory().openSession();		
 		Transaction txn=	session.beginTransaction();
 		Mtrackpost obj=session.get(Mtrackpost.class, id);		
-		session.delete(obj);
-		session.delete(obj.getPostinfo());
+		//session.delete(obj);
+		//session.delete(obj.getPostinfo());
+		Mtrackpostview postview=	obj.getPostinfo();
+		postview.setStatus(RecordStatus.DELETE.getStatus());
+		obj.setStatus(RecordStatus.DELETE.getStatus());
+		session.update(postview);
+		session.update(obj);
 		txn.commit();
 		return obj.toString();
 
@@ -207,7 +223,9 @@ public class MtrackMxDAOImpl extends DAOBase{
 		Session session=	getSessionFactory().openSession();		
 		Transaction txn=	session.beginTransaction();
 		MtrackUser obj=session.get(MtrackUser.class, id);		
-		session.delete(obj);
+		obj.setStatus(RecordStatus.DELETE.getStatus());
+		session.update(obj);
+		//session.delete(obj);
 		txn.commit();
 		return obj.toString();
 
@@ -288,10 +306,25 @@ public class MtrackMxDAOImpl extends DAOBase{
 		count++;
 		}
 
-		if(obj.getCreateddate()!=null && !"".equals(obj.getCreateddate()))
+		if((obj.getCreateddate()!=null && !"".equals(obj.getCreateddate())) && (obj.getModifieddate()!= null && !"".equals(obj.getCreateddate())) )
 		{	
-			sb.append(" and p.CREATEDDATE >= '"+MCommonUtils.dateTostring(obj.getCreateddate())+"'");
+			sb.append(" and p.CREATEDDATE between  '"+obj.getCreateddate()+"' and  '"+obj.getModifieddate()+"'");
 			count++;
+		}
+		else
+		{
+
+			if((obj.getCreateddate()!=null && !"".equals(obj.getCreateddate())) && (obj.getModifieddate()== null || "".equals(obj.getCreateddate())) )
+			{	
+				sb.append(" and p.CREATEDDATE >= '"+obj.getCreateddate()+"'");
+				count++;
+			}
+			
+			if((obj.getCreateddate()==null || "".equals(obj.getCreateddate())) && (obj.getModifieddate()!= null && !"".equals(obj.getCreateddate())) )
+			{	
+				sb.append(" and p.CREATEDDATE <= '"+obj.getModifieddate()+"'");
+				count++;
+			}
 		}
 
 		finalsql=sql+sb.toString();
@@ -300,7 +333,8 @@ public class MtrackMxDAOImpl extends DAOBase{
 	}
 
 	public Object postcatRetriveAll() throws HibernateException, Exception {
-		Criteria criteria =(Criteria) getSessionFactory().openSession().createCriteria(Mtrackcategory.class);
+		Criteria criteria =(Criteria) getSessionFactory().openSession().createCriteria(Mtrackcategory.class)
+				.add(Restrictions.eq("status",RecordStatus.ACTIVE.getStatus()));
 		try {
 			return criteria.list();
 		} catch (Exception e) {
@@ -308,6 +342,71 @@ public class MtrackMxDAOImpl extends DAOBase{
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	int qcount=0;
+	public Object searchQuotes(Quotes obj) throws HibernateException, Exception {
+		String query="select * from Quotes where status="+RecordStatus.ACTIVE.getStatus();		
+		qcount=0;
+		query= quoteGenerateWhere(obj, query);
+		List<Object> list = null;
+		if(qcount>0)
+		{
+			Session session=	getSessionFactory().openSession();		
+			Transaction txn=	session.beginTransaction();
+			SQLQuery sqlquery=  session.createSQLQuery(query);
+			int i=0;
+			while(i<sqlparm.size())
+			{
+				sqlquery.setString(i, (String) sqlparm.get(i));
+				i++;
+			}
+			list=sqlquery.addEntity(Quotes.class).list();
+
+			txn.commit();
+		}
+		if(list!=null && list.isEmpty())
+			throw new Exception("No Record Found");
+
+		return list;
+	}
+	
+	private String quoteGenerateWhere(Quotes obj,String sql)
+	{
+		String finalsql="";
+		StringBuilder sb=new StringBuilder();
+		
+		if(obj.getQuotedesc()!=null && !"".equals(obj.getQuotedesc()))
+		{
+			sb.append(" and QUOTEDESC like "+"'%"+obj.getQuotedesc()+"%'");
+			qcount++;
+		}
+
+		
+		if((obj.getCreateddate()!=null && !"".equals(obj.getCreateddate())) && (obj.getModifieddate()!= null && !"".equals(obj.getCreateddate())) )
+		{	
+			sb.append(" and CREATEDDATE between  '"+obj.getCreateddate()+"' and  '"+obj.getModifieddate()+"'");
+			qcount++;
+		}
+		else
+		{
+
+			if((obj.getCreateddate()!=null && !"".equals(obj.getCreateddate())) && (obj.getModifieddate()== null || "".equals(obj.getCreateddate())) )
+			{	
+				sb.append(" and CREATEDDATE >= '"+obj.getCreateddate()+"'");
+				qcount++;
+			}
+			
+			if((obj.getCreateddate()==null || "".equals(obj.getCreateddate())) && (obj.getModifieddate()!= null && !"".equals(obj.getCreateddate())) )
+			{	
+				sb.append(" and CREATEDDATE <= '"+obj.getModifieddate()+"'");
+				qcount++;
+			}
+		}
+
+		finalsql=sql+sb.toString();
+
+		return finalsql;
 	}
 
 

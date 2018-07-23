@@ -12,6 +12,8 @@ import { HomeComponent } from './home/home.component';
 import { PostComponent } from './post/post.component';
 import { PostinfoService } from './service/postinfo.service';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { QuoteComponent } from './quote/quote.component';
+import { QuoteinfoService } from './service/quoteinfo.service';
 
 
 @NgModule({
@@ -19,14 +21,15 @@ import {NgxPaginationModule} from 'ngx-pagination';
     AppComponent,
     LoginComponent,
     HomeComponent,
-    PostComponent
+    PostComponent,
+    QuoteComponent
   ],
   imports: [
     BrowserModule,FormsModule,RouterModule.forRoot(routes),HttpClientModule,
     NgxPaginationModule
 
   ],
-  providers: [AuthenticationService,PostinfoService],
+  providers: [AuthenticationService,PostinfoService,QuoteinfoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

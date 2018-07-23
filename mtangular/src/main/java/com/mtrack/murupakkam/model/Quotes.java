@@ -1,5 +1,6 @@
 package com.mtrack.murupakkam.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mtrack.murupakkam.core.model.Mbasemodel;
 import java.io.Serializable;
 import java.sql.Date;
@@ -8,13 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-
-
-
-
-
-
-
+import org.hibernate.annotations.GenericGenerator;
 
 
 @Entity
@@ -23,14 +18,17 @@ extends Mbasemodel
 implements Serializable
 {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(generator="quote_id_gen")
+	@GenericGenerator(name="quote_id_gen",strategy="com.mtangular.ui.utils.generator.QuoteGen")
 	private int quoteno;
 	private String quotedesc;
 	private String quotecolor;
 	private String quoteimg;
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date createddate;
 	private Integer cuser;
 	private Integer status;
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date modifieddate;
 	private Integer muser;
 

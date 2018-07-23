@@ -233,6 +233,15 @@ public class MtrackMxService extends ServiceBase {
 		}
 	}
 
+	public ResponseWrap<?> searchQuotes(Quotes obj) {
+		try {
+			return  handleSuccessResponse(mtrackMxDAOImpl.searchQuotes(obj));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return  handleFailedResponse((Object)e.getMessage(),null);
+		}
+	}
+
 	
 	
 }

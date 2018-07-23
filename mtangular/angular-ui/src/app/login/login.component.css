@@ -18,3 +18,7 @@
         margin-right: auto;
         display: block;
     }
+
+    .help-block{
+        color: red;
+    }

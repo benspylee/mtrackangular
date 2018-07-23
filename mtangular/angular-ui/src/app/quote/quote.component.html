@@ -1,0 +1,193 @@
+<div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default panel-table">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col col-xs-6">
+                <h3 class="panel-title">QuoteManager</h3>
+              </div>
+              <div class="col col-xs-6 text-right">
+                <button type="button" class="btn btn-sm btn-primary btn-create" (click)="reset()">Reset</button>
+                <button type="button" class="btn btn-sm btn-primary btn-create" (click)="searchpop()">Search</button>
+                <button type="button" class="btn btn-sm btn-primary btn-create" (click)="add()">Add</button>
+                <button type="button" class="btn btn-sm btn-primary btn-create" (click)="edit()">Edit</button>
+                <button type="button" class="btn btn-sm btn-primary btn-delete" (click)="deleteQuote()">Delete</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body">
+              <div>
+                  <pagination-controls  id="listing_pagination" maxSize="5" directionLinks="true" (pageChange)="page = $event;selectedRow=-1;"></pagination-controls>
+              </div>
+
+            <table class="table table-striped table-bordered table-list">
+              <thead>
+                <tr>
+                  <th>QuoteColor</th>
+                  <th>QuoteImg</th>
+                  <th>QuoteDesc</th>
+                </tr>
+              </thead>
+              <tr *ngFor="let quote of quotes | paginate: { id: 'listing_pagination',
+              itemsPerPage: itemsPerPage,
+              currentPage: page,
+              totalItems: totalRec }; let i = index;" (click)="setClickedRow(i)" [class.active]="i == selectedRow">
+                <td>{{getcolorname(quote.quotecolor)}}</td>
+                <td>{{quote.quoteimg}}</td>
+                <td class="ellipsis">{{quote.quotedesc}}</td>
+              </tr>
+            </table>          
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div id="myModal" class="modalq" [style.display]="popstyle">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <div (click)="toggle()">
+            <span class="close">&times;</span>
+          </div>
+          <div>
+              <Label>Manage Quote</Label> 
+          </div>         
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <form #f="ngForm" name="form" (ngSubmit)="f.form.valid && submitQuoteinfo()" novalidate>
+
+            
+
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !quotecolor.valid}">
+                <label for="quotecolor">QuoteColor</label>
+                <select [compareWith]="byId" id="quotecolor" name="quotecolor" class="form-control" [(ngModel)]="model.quotecolor"
+                  #quotecolor="ngModel" required>
+                  <option *ngFor="let cat of cats" [ngValue]="cat.quotecolorcd">{{cat.quotecolor}}</option>
+                </select>
+                <div *ngIf="f.submitted && !quotecolor.valid" class="help-block">QuoteColor required</div>
+              </div>
+
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !quotevdesc.valid}">
+                <label for="quotevdesc">QuoteDesc</label>
+                  <textarea rows="10" id="quotevdesc" name="quotevdesc" class="form-control" [(ngModel)]="model.quotedesc" 
+                  #quotevdesc="ngModel" required>
+                </textarea>
+                <div *ngIf="f.submitted && !quotevdesc.valid" class="help-block">QuoteDesc required</div>
+              </div>
+
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !quoteimg.valid}">
+                <label for="quoteimg">QuoteImage</label>
+                <input type="text" readonly id="quoteimg" name="quoteimg" class="form-control" [(ngModel)]="model.quoteimg"
+                  #quoteimg="ngModel" required />
+                <input type="file" #fileupload1 name="uploadfile1"  (change)="quoteimgfileChange($event)" class="form-control"  [(ngModel)]="model.fileupload1" #fileupload1="ngModel" />
+                     <div *ngIf="f.submitted && !quoteimg.valid" class="help-block">QuoteImage required</div>
+              </div>
+
+
+              <div class="form-group" style=" margin: 0 auto;text-align:center;">
+                <button class="btn btn-primary">Submit</button>
+              </div>
+              <div *ngIf="submiterror" class="help-block"> </div>
+
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!--   <h3> </h3> -->
+        </div>
+      </div>
+
+    </div>
+
+    <div id="searchmodal" class="modalq" [style.display]="searchstyle">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <div (click)="togglesearch()">
+              <span class="close">&times;</span>
+            </div>
+              <Label>Search Quote</Label> 
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <form #searchform="ngForm" name="form" (ngSubmit)="searchform.form.valid" novalidate>
+                <div class="form-group" [ngClass]="{'has-error':f.submitted && !quotedesc.valid}">
+                  <label for="quotedesc">QuoteDesc</label>
+                  <input type="text"   id="quotedesc" name="quotedesc" class="form-control" [(ngModel)]="searchmodel.quotedesc" #quotedesc="ngModel" />
+                  <div *ngIf="f.submitted && !quotedesc.valid" class="help-block">QuoteDesc required</div>
+                </div>
+  
+     <!--            <div class="form-group" [ngClass]="{'has-error':f.submitted && !quotecolor.valid}">
+                  <label for="quotecolor">QuoteColor</label>
+                  <select [compareWith]="byId" id="quotecolor" name="quotecolor" class="form-control" [(ngModel)]="model.quotecolor"
+                    #quotecolor="ngModel" >
+                    <option *ngFor="let cat of cats" [ngValue]="cat.quotecolor">{{cat.quotecolor}}</option>
+                  </select>
+                  <div *ngIf="f.submitted && !quotecolor.valid" class="help-block">QuoteColor required</div>
+                </div> -->
+
+                <div class="form-group" [ngClass]="{'has-error':searchform.submitted && !createddate.valid}">
+                  <label for="createddate">Quote FromDate</label>
+                  <input type="text" class="form-control" id="createddate" name="createddate" (change)="datehandle($event)" [(ngModel)]="searchmodel.createddate" #createddate="ngModel"/>
+                  <div *ngIf="f.submitted && !createddate.valid" class="help-block">Quote FromDate required</div>
+                </div>
+
+                <div class="form-group" [ngClass]="{'has-error':searchform.submitted && !modifieddate.valid}">
+                  <label for="modifieddate">Quote ToDate</label>
+                  <input type="text" class="form-control" id="modifieddate" name="modifieddate" (change)="datehandle($event)" [(ngModel)]="searchmodel.modifieddate" #modifieddate="ngModel"/>
+                  <div *ngIf="f.submitted && !modifieddate.valid" class="help-block">Quote ToDate required</div>
+                </div>
+  
+          
+                <div class="form-group" style=" margin: 0 auto;text-align:center;">
+                  <button class="btn btn-primary"  (click)="search()">Search</button>
+                  <button class="btn btn-primary" (click)="searchform.form.reset()">Reset</button>
+                </div>
+
+                <div *ngIf="submiterror" class="help-block"> </div>
+  
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <!--   <h3> </h3> -->
+          </div>
+        </div>
+  
+      </div>
+
+
+    <div id="alertModal" class="modalalertq" [style.display]="popalertstyle">
+      <div class="modal-alertcontent">
+        <div class="modal-header">
+          <div (click)="togglealert()">
+            <span class="close">&times;</span>           
+          </div>
+          <Label>Decision</Label> 
+        </div>
+
+        <div class="modal-body">
+          <div class="container">
+            <div style="text-align : center;">
+              <label>Are you sure you want to delete the item..?</label>
+            </div>
+            <div class="centered_buttons">
+              <button class="btn btn-primary div-button" (click)="deleteQuotedecision()">Ok</button>
+              <span width="10%"> </span>
+              <button class="btn btn-primary div-button" (click)="togglealert()">Cancel</button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>

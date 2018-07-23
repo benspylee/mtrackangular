@@ -1,4 +1,5 @@
-<div>
+
+  <div>
   <div class="container">
     <div class="row">
       <div class="col-md-10 col-md-offset-1">
@@ -64,8 +65,6 @@
       </div>
     </div>
 
-
-
     <div id="myModal" class="modal" [style.display]="popstyle">
 
       <!-- Modal content -->
@@ -82,27 +81,27 @@
           <div class="container">
             <form #f="ngForm" name="form" (ngSubmit)="f.form.valid && submitPostinfo()" novalidate>
 
-              <div class="form-group" [ngClass]="{'has-error':f.submitted && !posttitle.valid}">
-                <label for="posttitle">PostTitle</label>
-                <input type="text" id="posttitle" name="posttitle" class="form-control" [(ngModel)]="model.posttitle" #posttitle="ngModel"
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !fposttitle.valid}">
+                <label for="fposttitle">PostTitle</label>
+                <input type="text" id="fposttitle" name="fposttitle" class="form-control" [(ngModel)]="model.posttitle" #fposttitle="ngModel"
                   required />
-                <div *ngIf="f.submitted && !posttitle.valid" class="help-block">PostTitle required</div>
+                <div *ngIf="f.submitted && !fposttitle.valid" class="help-block">PostTitle required</div>
               </div>
 
-              <div class="form-group" [ngClass]="{'has-error':f.submitted && !postdesc.valid}">
-                <label for="postdesc">PostDesc</label>
-                <input type="text" id="postdesc" name="postdesc" class="form-control" [(ngModel)]="model.postdesc" #postdesc="ngModel"
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !fpostdesc.valid}">
+                <label for="fpostdesc">PostDesc</label>
+                <input type="text" id="fpostdesc" name="fpostdesc" class="form-control" [(ngModel)]="model.postdesc" #fpostdesc="ngModel"
                   required />
-                <div *ngIf="f.submitted && !postdesc.valid" class="help-block">PostDesc required</div>
+                <div *ngIf="f.submitted && !fpostdesc.valid" class="help-block">PostDesc required</div>
               </div>
 
-              <div class="form-group" [ngClass]="{'has-error':f.submitted && !newscategorycode.valid}">
-                <label for="newscategorycode">PostCategory</label>
-                <select [compareWith]="byId" id="newscategorycode" name="newscategorycode" class="form-control" [(ngModel)]="model.newscategorycode"
-                  #newscategorycode="ngModel" required>
-                  <option *ngFor="let cat of cats" [ngValue]="cat.newscategorycode">{{cat.newscategoryname1}} / {{cat.newscategoryname2}}</option>
+              <div class="form-group" [ngClass]="{'has-error':f.submitted && !fncategorycode.valid}">
+                <label for="fncategorycode">PostCategory</label>
+                <select [compareWith]="byId" id="fncategorycode" name="fncategorycode" class="form-control" ngControl="fncategoryControl"
+                [(ngModel)]="model.newscategorycode" #fncategorycode="ngModel" required>
+                  <option *ngFor="let cat of cats" [ngValue]="cat.newscategorycode">{{cat.newscategoryname1}}/{{cat.newscategoryname2}}</option>
                 </select>
-                <div *ngIf="f.submitted && !newscategorycode.valid" class="help-block">PostCategory required</div>
+                <div *ngIf="f.submitted && !fncategorycode.valid" class="help-block">Post Category required</div>
               </div>
 
 
@@ -110,14 +109,14 @@
                 <label for="postvwdesc">PostInfo</label>
                 <textarea rows="10" id="postvwdesc" name="postvwdesc" class="form-control" [(ngModel)]="model.postinfo.postviewdesc" #postvwdesc="ngModel"
                   required></textarea>
-                <div *ngIf="f.submitted && !postvwdesc.valid" class="help-block">PostDesc required</div>
+                <div *ngIf="f.submitted && !postvwdesc.valid" class="help-block">PostInfo required</div>
               </div>
 
               <div class="form-group" [ngClass]="{'has-error':f.submitted && !postimgurl.valid}">
                 <label for="postimgurl">PostImage</label>
                 <input type="text" readonly id="postimgurl" name="postimgurl" class="form-control" [(ngModel)]="model.postimgurl"
                   #postimgurl="ngModel" required />
-                <input type="file" #fileupload1 name="uploadfile1" (change)="postimgfileChange($event)" class="form-control"  />
+                <input type="file" #fileupload1 name="uploadfile1" [(ngModel)]="model.fileupload1" #fileupload1="ngModel" (change)="postimgfileChange($event)" class="form-control"  />
                 <!--     <button class="btn btn-success" [disabled]="uploadfile1 == undefined"
 	                  (click)="uploadfilepostimg()">Upload</button>
            -->
@@ -128,7 +127,7 @@
                   <label for="postimgurls">PostViewImage</label>
                   <input type="text" readonly id="postimgurls" name="postimgurls" class="form-control" [(ngModel)]="model.postinfo.postimgurls"
                     #postimgurls="ngModel" required />
-                  <input type="file" #fileupload2 name="uploadfile2" (change)="postimgfileChange($event)" class="form-control"  />
+                  <input type="file" #fileupload2 name="uploadfile2" [(ngModel)]="model.fileupload2" #fileupload2="ngModel" (change)="postimgfileChange($event)" class="form-control"  />
                   <!--     <button class="btn btn-success" [disabled]="uploadfile1 == undefined"
                       (click)="uploadfilepostimg()">Upload</button>
              -->
@@ -162,7 +161,7 @@
           </div>
           <div class="modal-body">
             <div class="container">
-              <form #searchform="ngForm" name="form" (ngSubmit)="searchform.form.valid && search()" novalidate>
+              <form #searchform="ngForm" name="form" (ngSubmit)="searchform.form.valid " novalidate>
   
                 <div class="form-group" [ngClass]="{'has-error':searchform.submitted && !posttitle.valid}">
                   <label for="posttitle">PostTitle</label>
@@ -186,14 +185,22 @@
                 </div>
 
                 <div class="form-group" [ngClass]="{'has-error':searchform.submitted && !createddate.valid}">
-                    <label for="createddate">Post Date</label>
+                    <label for="createddate">Post FromDate</label>
                     <input type="text" class="form-control" id="createddate" name="createddate" (change)="datehandle($event)" [(ngModel)]="searchmodel.createddate" #createddate="ngModel"/>
                     <div *ngIf="f.submitted && !createddate.valid" class="help-block">Post Date required</div>
                   </div>
+
+                  <div class="form-group" [ngClass]="{'has-error':searchform.submitted && !modifieddate.valid}">
+                    <label for="modifieddate">Post ToDate</label>
+                    <input type="text" class="form-control" id="modifieddate" name="modifieddate" (change)="datehandle($event)" [(ngModel)]="searchmodel.modifieddate" #modifieddate="ngModel"/>
+                    <div *ngIf="f.submitted && !modifieddate.valid" class="help-block">Post ToDate required</div>
+                  </div>
           
                 <div class="form-group" style=" margin: 0 auto;text-align:center;">
-                  <button class="btn btn-primary">Search</button>
+                  <button class="btn btn-primary" (click)="search()">Search</button>
+                  <button class="btn  btn-primary" (click)="searchform.form.reset()">Reset</button>
                 </div>
+              
                 <div *ngIf="submiterror" class="help-block"> </div>
   
               </form>
@@ -205,7 +212,6 @@
         </div>
   
       </div>
-
 
     <div id="alertModal" class="modalalert" [style.display]="popalertstyle">
       <div class="modal-alertcontent">
@@ -234,3 +240,4 @@
 
 
     </div>
+

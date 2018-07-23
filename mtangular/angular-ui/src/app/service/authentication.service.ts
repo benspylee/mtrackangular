@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
 import { BehaviorSubject } from 'rxjs';
 import { Headers,RequestOptions } from '@angular/http';
+import { CommonUtils } from '../model/commonUtils';
 
 @Injectable()
 export class AuthenticationService {
@@ -30,7 +31,7 @@ export class AuthenticationService {
 
 
   login(user: User) :any {
-    let userxst=btoa("mark:m@dm@xFury");
+    let userxst=btoa(CommonUtils.appUserKey);
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json',
@@ -38,7 +39,7 @@ export class AuthenticationService {
       })
     };
 
-    return   this.httpclient.post("/api/users/authenticate", user,httpOptions)
+    return   this.httpclient.post(CommonUtils.appContextpath+"api/users/authenticate", user,httpOptions)
      .map((response: Response) => response);
    /* .map(
       actuser => {

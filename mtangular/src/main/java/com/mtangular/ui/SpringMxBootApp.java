@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -48,7 +49,7 @@ import com.mtangular.ui.core.BaseConfig;
 //@Import(value=BaseConfig.class) (exclude=HibernateJpaAutoConfiguration.class)
 @EntityScan(basePackages="com.mtrack.murupakkam.model") 
 @PropertySource({"classpath:application.properties"})
-public class SpringMxBootApp implements CommandLineRunner,WebMvcConfigurer {
+public class SpringMxBootApp extends SpringBootServletInitializer  implements CommandLineRunner,WebMvcConfigurer {
 	
 	//@Autowired
     //DataSource dataSource;

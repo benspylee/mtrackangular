@@ -52,10 +52,11 @@ implements Serializable
 	private String posttitle2;
 	private String postdesc;
 	private String postimgurl;
-	@JsonFormat(pattern="MM/dd/yyyy")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date createddate;
 	private Integer cuser;
 	private Integer status;
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date modifieddate;
 	private Integer muser;
 	private int newscategorycode;

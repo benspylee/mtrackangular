@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mtangular.ui.core.ControlBase;
 import com.mtangular.ui.service.MtrackMxService;
 import com.mtrack.murupakkam.core.model.ResponseWrap;
+import com.mtrack.murupakkam.model.Mtrackpost;
 import com.mtrack.murupakkam.model.Quotes;
 
 @RestController
@@ -52,7 +53,11 @@ public class QuoteMxController extends ControlBase<Quotes> {
 		return (ResponseWrap<?>) mtrackMxService.deleteQuotes(id);
 	}
 	
-	
-	
+	@RequestMapping(path="/quotes/search",method=RequestMethod.POST)
+	public ResponseWrap<?> search(@RequestBody Quotes obj)
+	{
+		return (ResponseWrap<?>) mtrackMxService.searchQuotes(obj);
+	}
+		
 
 }

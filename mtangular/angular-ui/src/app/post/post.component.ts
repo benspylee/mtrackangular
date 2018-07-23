@@ -66,11 +66,17 @@ export class PostComponent implements OnInit {
     var self = this;
      $(document).ready(function(){
       $("#createddate").datepicker({
+        dateFormat: 'yy-mm-dd',
         onSelect: function(date) {
           self.searchmodel.createddate=date;
         }});
-    }); 
 
+        $("#modifieddate").datepicker({
+          dateFormat: 'yy-mm-dd',
+          onSelect: function(date) {
+            self.searchmodel.modifieddate=date;
+          }});
+    }); 
   }
 
   datehandle(event){
@@ -88,6 +94,7 @@ export class PostComponent implements OnInit {
   }
 
   searchpop(){
+    this.searchmodel=new Posts();
     this.togglesearch();
   }
 

@@ -7,6 +7,7 @@ import { NgModuleDefinition } from '@angular/core/src/view';
 import { Observable } from 'rxjs/Observable';
 import { AuthenticationService } from './service/authentication.service';
 import { PostComponent } from './post/post.component';
+import { QuoteComponent } from './quote/quote.component';
 
 @Component({
   selector: 'app-root',
@@ -39,6 +40,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
   { path: 'post', component: PostComponent },
+  { path: 'quote', component: QuoteComponent },
   { path: '#', redirectTo: '' }
 ];
 

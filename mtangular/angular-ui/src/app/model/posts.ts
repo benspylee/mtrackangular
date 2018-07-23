@@ -9,8 +9,9 @@ export class Posts {
   createddate:String;
   modifieddate:String;
   muser:number=0;
-  newscategorycode:number=0;	
-
+  newscategorycode:number;	
+  fileupload1:String='';
+  fileupload2:String='';
 
   postinfo:any={};
 
